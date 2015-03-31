@@ -6,12 +6,7 @@
     </style>
 
     <style name="Dialog" parent="@android:style/Theme.Dialog">
-        <item name="android:windowBackground">@color/background_material_light</item>
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowFullscreen">false</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowAnimationStyle">@style/DialogAnimationStyle</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
     <style name="DialogAnimationStyle">

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -35,7 +36,8 @@ public class GameOverDialog extends DialogFragment {
         View v = inflater.inflate(R.layout.dialog_layout, container);
         TextView btnTryAgain = (TextView) v.findViewById(R.id.try_again_button);
         TextView btnQuit = (TextView) v.findViewById(R.id.quit);
-        getDialog().setTitle("Game Over");
+        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         btnTryAgain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,7 +53,6 @@ public class GameOverDialog extends DialogFragment {
                 dismiss();
             }
         });
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog);
         return v;
     }
     public void setSV(SnakeView sV) {
