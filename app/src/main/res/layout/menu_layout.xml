@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_menu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/material_blue_grey_800"
-    >
+    android:listSelector="@android:color/transparent"
+    android:orientation="vertical"
+    android:layout_gravity="center_vertical"
+    android:paddingTop="40dp">
     <TextView
-        android:id="@+id/menu_play_button"
         android:layout_width="match_parent"
-        android:layout_gravity="center_horizontal"
+        android:layout_height="66dp"
         android:layout_centerHorizontal="true"
         android:layout_margin="10dp"
-        android:text="Play"
         android:gravity="center"
-        android:textColor="@android:color/black"
-        android:padding="10dp"
-        android:background="@android:color/white"
-        android:layout_height="44dp" />
-</RelativeLayout>
+        android:textColor="#ffffffff"
+        android:text="SNAKE"
+        android:textSize="55dp"
+        android:textColorHint="#ffd3d1d1"
+        android:textStyle="bold"
+        android:typeface="monospace"
+        android:layout_marginBottom="30dp"/>
+
+    </LinearLayout>

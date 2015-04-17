@@ -3,6 +3,7 @@ package com.jdahlkar.snake.view;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -35,12 +36,15 @@ public class SnakeView extends View implements View.OnTouchListener{
     private boolean dead = false;
     private Food food;
     private int score = 0;
+    private int highscore;
+    private boolean pause = false;
     private int counter = 0;
     private int boardWidth = 20;
     private int boardHeight = 20;
     private final Paint paint = new Paint();
     private RefreshHandler redrawHandler = new RefreshHandler();
-    private TextView scoreTextView;
+    private TextView scoreTextView, highScoreTextView, pauseTextView;
+    private SharedPreferences data;
     private final GestureDetector gestureDetector = new GestureDetector(new GestureListener());
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -49,8 +53,13 @@ public class SnakeView extends View implements View.OnTouchListener{
 
     class RefreshHandler extends Handler {
         public void handleMessage(Message msg) {
-            SnakeView.this.update();
-            SnakeView.this.invalidate();
+            if(msg.what == 0) {
+                SnakeView.this.update();
+                SnakeView.this.invalidate();
+                Log.d("handlemessage", "msg == 0");
+            } else {
+                Log.d("handlemessage", "msg != 0");
+            }
         }
         public void sleep(long delayMillis) {
             this.removeMessages(0);
@@ -78,10 +87,26 @@ public class SnakeView extends View implements View.OnTouchListener{
         this.food = new Food(boardWidth, boardHeight);
         paint.setStyle(Paint.Style.FILL);
         this.setOnTouchListener(this);
+        data = context.getSharedPreferences("com.jdahlkar.snake", Context.MODE_PRIVATE);
     }
     public void setScoreTextView(TextView scoreTextView) {
         this.scoreTextView = scoreTextView;
         scoreTextView.setText("Score: " + score);
+    }
+    public void setHighScoreTextView(TextView highScoreTextView) {
+        this.highScoreTextView = highScoreTextView;
+        highscore = data.getInt("highscore", 0);
+        highScoreTextView.setText("High Score: " + highscore);
+    }
+
+    public void setPauseTextView(TextView pauseTextView) {
+        this.pauseTextView = pauseTextView;
+        pauseTextView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pause();
+            }
+        });
     }
     public boolean checkForWallCollision() {
         SnakeSegment head = snake.getHead();
@@ -122,7 +147,12 @@ public class SnakeView extends View implements View.OnTouchListener{
             Log.d("update", "dead");
             GameOverDialog gameOverDialog = GameOverDialog.newInstance();
             gameOverDialog.setSV(this);
-            gameOverDialog.show(((Activity)context).getFragmentManager(), "gameover");
+            gameOverDialog.show(((Activity) context).getFragmentManager(), "gameover");
+            highscore = highscore > score ? highscore : score;
+            SharedPreferences.Editor editor = data.edit();
+            editor.putInt("highscore", highscore);
+            editor.commit();
+            highScoreTextView.setText("High Score: " + highscore);
             return;
         }
         snake.move();
@@ -230,7 +260,21 @@ public class SnakeView extends View implements View.OnTouchListener{
         invalidate();
         Log.d("SnakeView", "restart");
     }
+    private void pause() {
+        if (pause) {
+            redrawHandler.removeMessages(1);
+            redrawHandler.sendMessage(redrawHandler.obtainMessage(0));
+            pauseTextView.setText("Pause");
+            pause = false;
+        } else {
+            redrawHandler.removeMessages(0);
+            redrawHandler.sendMessage(redrawHandler.obtainMessage(1));
+            pauseTextView.setText("Play");
+            pause = true;
+        }
+    }
     public void exit() {
         ((Activity)context).finish();
     }
+    public int getScore() { return score; }
 }

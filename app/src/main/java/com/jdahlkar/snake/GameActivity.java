@@ -15,8 +15,12 @@ public class GameActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.snake_layout);
         TextView scoreTextView = (TextView) findViewById(R.id.score);
+        TextView highScoreTextView = (TextView) findViewById(R.id.highscore);
+        TextView pauseTextView = (TextView) findViewById(R.id.pause_button);
         view = (SnakeView) findViewById(R.id.snake);
         view.setScoreTextView(scoreTextView);
+        view.setHighScoreTextView(highScoreTextView);
+        view.setPauseTextView(pauseTextView);
         view.update();
     }
 }
